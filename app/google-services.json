@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "690952850625",
+    "project_id": "arpitestapp",
+    "storage_bucket": "arpitestapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690952850625:android:f14dd50f669c7e4a0bd840",
+        "android_client_info": {
+          "package_name": "com.example.arpitestapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690952850625-ns8mogu6o31643q2pb86iu90gtj1kqcr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6p5MlSmS3A-sGr6Nlw2ifa3xBYqw5p4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690952850625-ns8mogu6o31643q2pb86iu90gtj1kqcr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
