@@ -7,11 +7,16 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.arpitestapp.Entities.GenreLibrary;
+import com.example.arpitestapp.Entities.Recipe;
+import com.example.arpitestapp.Entities.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,22 +27,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("unga");
+        ArrayList<String> interests = new ArrayList<>();
+        interests.add("Western");
+        User tester = new User("hudfhudsfh", "pw", "name", 9, "bio", interests);
 
-        myRef.setValue("amongus");
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                Log.d("fjkjjhgh", "Value is");
-            }
+        DatabaseReference myRef = database.getReference("users/"+tester.getUsername());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("Failed to read value.", error.toException());
-            }
-        });
+        myRef.setValue(tester);
+
+
     }
 
 
