@@ -1,7 +1,10 @@
 package com.example.arpitestapp.Entities;
 
+import com.example.arpitestapp.Gateways.Constants;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is the User Entity. It possesses 7 attributes:
@@ -12,7 +15,7 @@ import java.util.HashMap;
  *  •biography- a description of the user(String)
  *  •interests- a list of genres(Strings) the user is interested in (ArrayList<String>)
  *  •SavedRecipes - a list of the recipes the user has saved (ArrayList<Recipe>)
- *  •UserReviews - a list of the reviews the user has made (ArrayList<Review>)
+ *  •UserReviews - a hashmap of the IDs of the recipes the user has reviewed to the reviews (HashMap<int, Review>)
  */
 public class User {
     private String displayName;
@@ -23,8 +26,8 @@ public class User {
     private ArrayList<String> interests;
     private ArrayList<Recipe> SavedRecipes = new ArrayList<>();
 
-    private HashMap<Integer, Review> UserReviews = new HashMap<>();
-    private HashMap<String, Double> GenreWeights = new HashMap<>();
+    private Map<Integer, Review> UserReviews = new HashMap<>();
+    private Map<String, Double> GenreWeights = new HashMap<>();
 
     public User(){
         this.interests = new ArrayList<>();
@@ -95,9 +98,9 @@ public class User {
         }
         return h;
     }
-    public HashMap<Integer, Review> getUserReviews() {return UserReviews;}
+    public Map<Integer, Review> getUserReviews() {return UserReviews;}
 
-    public HashMap<String, Double> getGenreWeights() { return GenreWeights; }
+    public Map<String, Double> getGenreWeights() { return GenreWeights; }
 
     /**
      * Setter Methods for User:
@@ -130,8 +133,8 @@ public class User {
         updateGenreWeights(recipe.getID());
     }
 
-    public void addSavedReviews(int reviewID, Review review) {
-        UserReviews.put(reviewID, review);
+    public void addSavedReviews(int recipeID, Review review) {
+        UserReviews.put(recipeID, review);
     }
 
     /**

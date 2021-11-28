@@ -1,5 +1,7 @@
 package com.example.arpitestapp.Entities;
 
+import com.example.arpitestapp.Gateways.Constants;
+
 public class Review {
     // NOTE: NOT USED IN SKELETON MODEL
     private int reviewID;

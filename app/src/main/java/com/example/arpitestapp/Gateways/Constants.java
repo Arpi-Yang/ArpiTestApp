@@ -1,4 +1,9 @@
-package com.example.arpitestapp.Entities;
+package com.example.arpitestapp.Gateways;
+
+import com.example.arpitestapp.Entities.GenreLibrary;
+import com.example.arpitestapp.Entities.Recipe;
+import com.example.arpitestapp.Entities.User;
+import com.example.arpitestapp.Entities.UserSecurity;
 
 import java.util.*;
 
