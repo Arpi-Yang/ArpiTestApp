@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.arpitestapp.Entities.User;
+import com.example.arpitestapp.Gateways.Create;
 import com.example.arpitestapp.Gateways.Update;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Update.test();
+        Create.testCreate();
+        Create.testRecipe();
+        Update.test();
     }
 
 
