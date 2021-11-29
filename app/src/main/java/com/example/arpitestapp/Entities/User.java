@@ -57,8 +57,19 @@ public class User {
     }
 
     /* Updates GenreWeights when a recipe is saved */
+
+    // TODO: switch this to taking in a recipe directly
     private void updateGenreWeights(Integer recipeID) {
         Recipe recipe = Constants.GENRELIBRARY.getRecipeByID("All", recipeID);
+        ArrayList<String> recipeGenre = recipe.getGenre();
+        for (String genre: recipeGenre){
+            if (!genre.equals("All")) {
+                this.GenreWeights.put(genre, 0.05);
+            } // make sure that GenreWeights.get(genre) is not greater than 1.0
+        }
+    }
+
+    private void updateGenreWeights(Recipe recipe) {
         ArrayList<String> recipeGenre = recipe.getGenre();
         for (String genre: recipeGenre){
             if (!genre.equals("All")) {
@@ -127,10 +138,10 @@ public class User {
         this.updateGenreWeights(interest);
     }
 
-
+    // TODO: change this in final app
     public void addSavedRecipes(Recipe recipe) {
         SavedRecipes.add(recipe);
-        updateGenreWeights(recipe.getID());
+        updateGenreWeights(recipe);
     }
 
     public void addSavedReviews(int recipeID, Review review) {
@@ -142,8 +153,7 @@ public class User {
      * @return ArrayList<Object> representing the profile that has been generated
      */
     public UserInfo getProfile(){
-        UserInfo profile = new UserInfo(username, password, displayName, age, biography, interests);
-        return profile;
+        return new UserInfo(username, password, displayName, age, biography, interests);
     }
 
 
