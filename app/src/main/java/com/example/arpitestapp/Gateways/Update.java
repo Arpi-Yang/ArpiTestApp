@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Update {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -21,7 +22,7 @@ public class Update {
 
 
         ArrayList<String> genres = new ArrayList<>();
-        genres.add("French");
+        genres.add("German");
 
         Recipe testRecipe = new Recipe("instructions", "ingredients", genres, "name", 3, 210, "img_210", "description", 10);
         Recipe testRecipe2 = new Recipe("instructions", "ingredients", genres, "name2", 3, 211, "img_210", "description", 10);
@@ -38,12 +39,22 @@ public class Update {
 
         reviewCreated(testReview);
         recipesSaved(tester);
+        userGenreWeights(tester.getUsername(), tester.getGenreWeights());
         recipeRating(testRecipe);
+
+        tester.setAge(22);
+        userProfile(tester.getUsername(), 22, "age");
+
+        tester.addInterests("Indonesian");
+        userProfile(tester.getUsername(), tester.getInterests(), "interests");
     }
 
+    // updates recipe rating (to be used after updating recipe reviews)
     public static void recipeRating(Recipe recipe){
         DatabaseReference recipeRatingRef = database.getReference("recipes/"+recipe.getID()+"/rating");
+        DatabaseReference recipeRatingListRef = database.getReference("recipes/"+recipe.getID()+"/ratingList");
         recipeRatingRef.setValue(recipe.getRating());
+        recipeRatingListRef.setValue(recipe.getRatingList());
     }
 
     // UPDATES (OVERRIDES WHOLE, SO CAN BE USED FOR DELETION)
@@ -63,5 +74,17 @@ public class Update {
 
         userReviewsRef.setValue(review);
         recipeReviewsRef.setValue(review);
+    }
+
+    // updates specific property of user profile
+    public static void userProfile(String username, Object property, String propertyName){
+        DatabaseReference userRef = database.getReference("users/"+username+"/"+propertyName);
+        userRef.setValue(property);
+    }
+
+    // updates user genre weights (to be used after saving recipe, adding/deleting interests)
+    public static void userGenreWeights(String username, Map<String, Double> genreWeights){
+        DatabaseReference userRef = database.getReference("users/"+username+"/genreWeights");
+        userRef.setValue(genreWeights);
     }
 }
