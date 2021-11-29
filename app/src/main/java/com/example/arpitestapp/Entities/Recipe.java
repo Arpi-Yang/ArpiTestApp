@@ -1,5 +1,8 @@
 package com.example.arpitestapp.Entities;
 
+import com.example.arpitestapp.Entities.Preview;
+import com.example.arpitestapp.Entities.Review;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +35,7 @@ public class Recipe {
     private String description;
     private Preview preview;
     private int preptime;
-    private FullPreview full;
+    private ArrayList<Integer> ratingList;
 
     /**
      * Constructor for Recipe
@@ -53,8 +56,10 @@ public class Recipe {
         this.description = description;
         this.preptime = preptime;
         this.RecipeReviews = new HashMap<>();
-        this.preview = new Preview(id, name, rating, genres, description);
-        this.full = new FullPreview(this);
+        this.preview = new Preview(this);
+        ArrayList<Integer> ratings = new ArrayList<>();
+        ratings.add(rating);
+        this.ratingList = ratings;
     }
 
 
@@ -99,12 +104,9 @@ public class Recipe {
     public int getPreptime() {return preptime;}
 
     public Preview getPreview() {
-        return preview;
+        return new Preview(this);
     }
 
-    public FullPreview getFull() {
-        return full;
-    }
 
     /**
      * Setter Methods for Recipe:
@@ -120,11 +122,9 @@ public class Recipe {
      */
     public void setInstructions(String instructions) {
         this.instructions = instructions;
-        this.full.setInstructions(instructions);
     }
     public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
-        this.full.setIngredients(ingredients);
     }
     public void setGenre(ArrayList<String> genre) {
         this.genre = genre;
@@ -148,15 +148,18 @@ public class Recipe {
     }
     public void setImage(String image) {
         this.image = image;
-        this.full.setImage(image);
     }
     public void setPreptime(int preptime) {
         this.preptime = preptime;
-        this.full.setPreptime(preptime);
     }
 
     public void addSavedReviews(String username, Review review) {
         this.RecipeReviews.put(username, review);
+        this.ratingList.add(review.getRating());
+        double sum = 0;
+        for(Integer i : ratingList)
+            sum += i;
+        this.rating = (int) Math.round(sum/ratingList.size());
     }
 
 }
