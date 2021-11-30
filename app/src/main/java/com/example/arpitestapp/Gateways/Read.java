@@ -69,6 +69,7 @@ public class Read {
         String userPassword = singleUserRef.child("password").getValue(String.class);
         String userBiography = singleUserRef.child("biography").getValue(String.class);
         int userAge = singleUserRef.child("age").getValue(Integer.class);
+
         // TODO: fix this one and fix the database for it
         ArrayList<String> userInterests = new ArrayList<>();
 
@@ -110,6 +111,7 @@ public class Read {
         // Loop through all the recipes in the database
         for(DataSnapshot ds : dataSnapshot.getChildren()){
 
+            // TODO: figure out how to input a genre string and what that means
             // Add a recipe from the database to the GenreLibrary object
             Recipe recipe = readRecipe(ds);
             recipeGenreLibrary.addRecipes("filler string", recipe);
