@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         mConditionTextView = (TextView)findViewById(R.id.textViewCondition);
         mButtonSunny = (Button)findViewById(R.id.button_sunny);
         mButtonFoggy = (Button)findViewById(R.id.button_foggy);
+
     }
 
     @Override
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         GenreLibrary thisGenreLibrary = Read.populateGenreLibrary();
         String name = "+" + thisGenreLibrary.toString();
         mConditionTextView.setText(name);
+        //Update.test();
+
 
 //        mRecipeRef.addValueEventListener(new ValueEventListener() {
 //            @Override

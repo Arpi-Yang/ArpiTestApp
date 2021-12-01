@@ -1,5 +1,7 @@
 package com.example.arpitestapp.Entities;
 
+import com.example.arpitestapp.Gateways.Create;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ public class GenreLibrary {
             HashMap<Integer, Recipe> recipe_map = this.ListOfAllRecipes.get(genre);
             recipe_map.put(recipe.getID(), recipe);
         }
+        Create.createRecipe(recipe);
     }
 
 
