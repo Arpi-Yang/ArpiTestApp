@@ -20,7 +20,7 @@ public class GenreLibrary {
         }
     }
 
-
+    // TODO: create some methods to make grabbing a recipe and testing easier
     public ArrayList<String> getAllGenres(){
         return new ArrayList<>(this.ListOfAllRecipes.keySet());
     }

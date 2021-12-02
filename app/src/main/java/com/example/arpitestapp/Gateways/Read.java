@@ -17,6 +17,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * something something document my code
+ */
 public class Read {
     private static final String TAG = "Read";
 
@@ -25,7 +28,7 @@ public class Read {
     private static final DatabaseReference mRecipeRef = mRootRef.child("recipes");
     private static final DatabaseReference mUserRef = mRootRef.child("users");
 
-    public  static UserSecurity populateUserSecurity() {
+    public static UserSecurity populateUserSecurity() {
         // Initialize an empty UserSecurity object to populate
         final UserSecurity[] populatedUserSecurity = {new UserSecurity()};
 
@@ -52,7 +55,7 @@ public class Read {
         UserSecurity usersUserSecurity = new UserSecurity();
 
         // Loop through all the users in the database
-        for(DataSnapshot singleUserRef : dataSnapshot.getChildren()){
+        for (DataSnapshot singleUserRef : dataSnapshot.getChildren()) {
 
             // Add a user from the database to the UserSecurity object
             User user = readUser(singleUserRef);
@@ -62,6 +65,11 @@ public class Read {
         return usersUserSecurity;
     }
 
+    /**
+     *
+     * @param singleUserRef
+     * @return
+     */
     private static User readUser(DataSnapshot singleUserRef) {
         // Read user attributes from singleUserRef
         String userUsername = singleUserRef.child("username").getValue(String.class);
@@ -101,31 +109,42 @@ public class Read {
         return populatedGenreLibrary[0];
     }
 
-    /*
-    note: dataSnapshot must be mRecipeRef
+    /**
+     * note: dataSnapshot must be mRecipeRef
      */
     private static GenreLibrary fillGenreLibrary(DataSnapshot dataSnapshot) {
         // Create empty GenreLibrary object
         GenreLibrary recipeGenreLibrary = new GenreLibrary();
 
         // Loop through all the recipes in the database
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-
-            // TODO: figure out how to input a genre string and what that means
-            // Add a recipe from the database to the GenreLibrary object
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Recipe recipe = readRecipe(ds);
-            recipeGenreLibrary.addRecipes("filler string", recipe);
+
+            // Add each recipe to recipeGenreLibrary
+            for(String genre: recipe.getGenre()){
+                recipeGenreLibrary.addRecipes(genre, recipe);
+            }
         }
 
         return recipeGenreLibrary;
     }
 
+    /**
+     * @param singleRecipeRef
+     * @return
+     */
     public static Recipe readRecipe(DataSnapshot singleRecipeRef) {
         // Read recipe attributes from singleRecipeRef
-        int recipeID = singleRecipeRef.child("ID").getValue(Integer.class);
+        int recipeID = singleRecipeRef.child("id").getValue(Integer.class);
         String recipeDescription = singleRecipeRef.child("description").getValue(String.class);
-        // TODO: add genre values to our recipes in the database and add them
+
+
         ArrayList<String> recipeGenres = new ArrayList<>();
+        DataSnapshot recipeGenreListDatabase = singleRecipeRef.child("genre");
+        for (DataSnapshot genre : recipeGenreListDatabase.getChildren()) {
+            recipeGenres.add(genre.getValue(String.class));
+        }
+
         String recipeImage = singleRecipeRef.child("image").getValue(String.class);
         String recipeIngredients = singleRecipeRef.child("ingredients").getValue(String.class);
         String recipeInstructions = singleRecipeRef.child("instructions").getValue(String.class);
