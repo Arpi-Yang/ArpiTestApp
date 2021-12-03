@@ -96,14 +96,14 @@ public class Read {
     public static GenreLibrary populateGenreLibrary() {
         // Initialize an empty GenreLibrary object to populate
 
-        GenreLibrary populatedGenreLib = new GenreLibrary();
+        final GenreLibrary[] populatedGenreLib = {new GenreLibrary()};
 
 //      Add a listener event object to the recipe database reference
         mRecipeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Populate the GenreLibrary object
-                fillGenreLibrary(populatedGenreLib, dataSnapshot);
+                populatedGenreLib[0] = fillGenreLibrary(dataSnapshot);
 
             }
 
@@ -113,7 +113,7 @@ public class Read {
             }
         });
 
-        return populatedGenreLib;
+        return populatedGenreLib[0];
     }
 
 
@@ -121,8 +121,9 @@ public class Read {
     /**
      * note: dataSnapshot must be mRecipeRef
      */
-    private static void fillGenreLibrary(GenreLibrary genreLibrary, DataSnapshot dataSnapshot) {
+    private static GenreLibrary fillGenreLibrary(DataSnapshot dataSnapshot) {
         // Create empty GenreLibrary object
+        GenreLibrary genreLibrary = new GenreLibrary();
 
         // Loop through all the recipes in the database
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -135,6 +136,7 @@ public class Read {
             }
 
         }
+        return genreLibrary;
     }
 
     /**
