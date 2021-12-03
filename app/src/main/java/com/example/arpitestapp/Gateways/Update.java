@@ -3,6 +3,7 @@ package com.example.arpitestapp.Gateways;
 import com.example.arpitestapp.Entities.Recipe;
 import com.example.arpitestapp.Entities.Review;
 import com.example.arpitestapp.Entities.User;
+import com.example.arpitestapp.Entities.UserSecurity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +20,8 @@ public class Update {
         interests.add("Western");
 
         User tester = new User("testUserUpdates", "pw", "name", 9, "bio", interests);
-
+        UserSecurity testUserSecurity = new UserSecurity();
+        testUserSecurity.addUser(tester);
 
         ArrayList<String> genres = new ArrayList<>();
         genres.add("German");
@@ -42,11 +44,15 @@ public class Update {
         userGenreWeights(tester.getUsername(), tester.getGenreWeights());
         recipeRating(testRecipe);
 
-        tester.setAge(22);
-        userProfile(tester.getUsername(), 22, "age");
 
-        tester.addInterests("Indonesian");
-        userProfile(tester.getUsername(), tester.getInterests(), "interests");
+
+        testUserSecurity.changeAge(tester.getUsername(), 20202);
+
+//        tester.setAge(22);
+//        userProfile(tester.getUsername(), 22, "age");
+//
+//        tester.addInterests("Indonesian");
+//        userProfile(tester.getUsername(), tester.getInterests(), "interests");
     }
 
     // updates recipe rating (to be used after updating recipe reviews)

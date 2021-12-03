@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.example.arpitestapp.Entities.GenreLibrary;
 import com.example.arpitestapp.Entities.Recipe;
 import com.example.arpitestapp.Entities.User;
-import com.example.arpitestapp.Gateways.Constants;
 import com.example.arpitestapp.Gateways.Create;
 import com.example.arpitestapp.Gateways.Update;
 import com.example.arpitestapp.Gateways.Read;
@@ -40,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get UI elements
-        mConditionTextView = (TextView) findViewById(R.id.textViewCondition);
-        mButtonSunny = (Button) findViewById(R.id.button_sunny);
-        mButtonFoggy = (Button) findViewById(R.id.button_foggy);
+        mConditionTextView = (TextView)findViewById(R.id.textViewCondition);
+        mButtonSunny = (Button)findViewById(R.id.button_sunny);
+        mButtonFoggy = (Button)findViewById(R.id.button_foggy);
 
     }
 
@@ -50,21 +49,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        GenreLibrary thisGenreLibrary = Read.populateGenreLibrary();
-//        String name = "+" + thisGenreLibrary.toString();
-//        mConditionTextView.setText(name);
-
-        GenreLibrary testLib = Read.populateGenreLibrary();
-        String answer = Boolean.toString(testLib.ListOfAllRecipes.isEmpty());
-
-//        Recipe garbo = testLib.getRecipeByID("All", 0);
+        GenreLibrary thisGenreLibrary = Read.populateGenreLibrary();
+        String name = "+" + thisGenreLibrary.toString();
+        mConditionTextView.setText(name);
+        //Update.test();
 
 
-//        Recipe recipe = Constants.GENRELIBRARY.getRecipeByID("All",220);
-//        mConditionTextView.setText(recipe.getDescription());
-        mConditionTextView.setText(answer);
-
-
+//        mRecipeRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //
+//
+//
+//                GenreLibrary newGenreLibrary = Read.fillGenreLibrary(dataSnapshot);
+//                Recipe recipeZero = newGenreLibrary.getRecipeByID("all", 0);
+//                String name0 = recipeZero.getName();
+//
+//                DataSnapshot recipe0 = dataSnapshot.child("0");
+//                Recipe recipe = Read.readRecipe(recipe0);
+//                String name = recipe.getImage();
+//                mConditionTextView.setText(name0);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
     }
+
+    //    /** Called when the user taps the Send button */
+//    public void sendMessage(View view) {
+//        Intent intent = new Intent(this, DisplayMessageActivity.class);
+//        EditText editText = (EditText) findViewById(R.id.editTextTextPersonName);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+//        startActivity(intent);
+//    }
+
 }
