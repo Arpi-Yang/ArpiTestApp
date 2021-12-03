@@ -7,8 +7,11 @@ import androidx.annotation.NonNull;
 
 import com.example.arpitestapp.Entities.GenreLibrary;
 import com.example.arpitestapp.Entities.Recipe;
+import com.example.arpitestapp.Entities.Review;
 import com.example.arpitestapp.Entities.User;
 import com.example.arpitestapp.Entities.UserSecurity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -78,26 +81,30 @@ public class Read {
         String userBiography = singleUserRef.child("biography").getValue(String.class);
         int userAge = singleUserRef.child("age").getValue(Integer.class);
 
-        // TODO: fix this one and fix the database for it
-        ArrayList<String> userInterests = new ArrayList<>();
+        ArrayList<String> userInterestList = new ArrayList<>();
+        DataSnapshot userInterestsSnapshot = singleUserRef.child("interests");
+        for (DataSnapshot userInterest : userInterestsSnapshot.getChildren()) {
+            userInterestList.add(userInterest.getValue(String.class));
+        }
 
         // Construct and return a new user
-        User newUser = new User(userUsername, userPassword, userDisplayName, userAge, userBiography, userInterests);
+        User newUser = new User(userUsername, userPassword, userDisplayName, userAge, userBiography, userInterestList);
         return newUser;
     }
 
 
     public static GenreLibrary populateGenreLibrary() {
         // Initialize an empty GenreLibrary object to populate
-        final GenreLibrary[] populatedGenreLibrary = {new GenreLibrary()};
 
-        // Add a listener event object to the recipe database reference
+        GenreLibrary populatedGenreLib = new GenreLibrary();
+
+//      Add a listener event object to the recipe database reference
         mRecipeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Populate the GenreLibrary object
-                GenreLibrary newGenreLibrary = Read.fillGenreLibrary(dataSnapshot);
-                populatedGenreLibrary[0] = newGenreLibrary;
+                fillGenreLibrary(populatedGenreLib, dataSnapshot);
+
             }
 
             @Override
@@ -106,27 +113,28 @@ public class Read {
             }
         });
 
-        return populatedGenreLibrary[0];
+        return populatedGenreLib;
     }
+
+
 
     /**
      * note: dataSnapshot must be mRecipeRef
      */
-    private static GenreLibrary fillGenreLibrary(DataSnapshot dataSnapshot) {
+    private static void fillGenreLibrary(GenreLibrary genreLibrary, DataSnapshot dataSnapshot) {
         // Create empty GenreLibrary object
-        GenreLibrary recipeGenreLibrary = new GenreLibrary();
 
         // Loop through all the recipes in the database
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Recipe recipe = readRecipe(ds);
+//            System.out.println(recipe.getName());
 
             // Add each recipe to recipeGenreLibrary
             for(String genre: recipe.getGenre()){
-                recipeGenreLibrary.addRecipes(genre, recipe);
+                genreLibrary.addRecipes(genre, recipe);
             }
-        }
 
-        return recipeGenreLibrary;
+        }
     }
 
     /**
@@ -149,8 +157,9 @@ public class Read {
         String recipeIngredients = singleRecipeRef.child("ingredients").getValue(String.class);
         String recipeInstructions = singleRecipeRef.child("instructions").getValue(String.class);
         String recipeName = singleRecipeRef.child("name").getValue(String.class);
-        int recipePreptime = singleRecipeRef.child("preptime").getValue(Integer.class);
-        int recipeRating = singleRecipeRef.child("rating").getValue(Integer.class);
+
+        int recipePreptime = recipePrepReader(singleRecipeRef);
+        int recipeRating = recipeRatingReader(singleRecipeRef);
 
         // Construct and return a new recipe
         Recipe recipe = new Recipe(recipeInstructions, recipeIngredients,
@@ -158,5 +167,43 @@ public class Read {
                 recipeDescription, recipePreptime);
 
         return recipe;
+    }
+
+    private static int recipePrepReader(DataSnapshot singleRecipeRef) {
+
+        // Check if the recipe from the database has a valid prep time attribute.
+        // If it does, return the prep time attribute value.
+        if (singleRecipeRef.child("prep time").exists()) {
+            Object recipePrepHolder = singleRecipeRef.child("preptime").getValue();
+
+            if (recipePrepHolder instanceof Integer) {
+                return (Integer) recipePrepHolder;
+
+            }
+        }
+
+        // If no eligible value for prep time exists, return default value of 60 minutes.
+        return 60;
+
+
+    }
+
+    private static int recipeRatingReader(DataSnapshot singleRecipeRef) {
+
+        // Check if the recipe from the database has a valid rating attribute.
+        // If it does, return the rating attribute value.
+        if (singleRecipeRef.child("rating").exists()) {
+            Object recipeRatingHolder = singleRecipeRef.child("rating").getValue();
+
+            if (recipeRatingHolder instanceof Integer) {
+                return (Integer) recipeRatingHolder;
+
+            }
+        }
+
+        // If no eligible value for rating exists, return default value of 60 minutes.
+        return 60;
+
+
     }
 }

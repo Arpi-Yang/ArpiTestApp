@@ -25,6 +25,7 @@ public class GenreLibrary {
         return new ArrayList<>(this.ListOfAllRecipes.keySet());
     }
 
+
     public HashMap<Integer, Recipe> getAllRecipes(String genre){
         return this.ListOfAllRecipes.get(genre);
     }

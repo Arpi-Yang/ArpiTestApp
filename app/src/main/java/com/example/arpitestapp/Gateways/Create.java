@@ -32,7 +32,7 @@ public class Create{
     public static void testRecipe(){
         ArrayList<String> interests = new ArrayList<>();
         interests.add("Western");
-         Recipe recipe = new Recipe("nada", "love",interests, "bun up food", 7, 208, "img_208.png",
+         Recipe recipe = new Recipe("nada", "love",interests, "bun up food", 7, 220, "img_208.png",
                 "short n sweet", 10);
         Create.createRecipe(recipe);
 
