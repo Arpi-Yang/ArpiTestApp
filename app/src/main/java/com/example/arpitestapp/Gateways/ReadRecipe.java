@@ -2,7 +2,6 @@ package com.example.arpitestapp.Gateways;
 
 import com.example.arpitestapp.Entities.Recipe;
 import com.google.firebase.database.DataSnapshot;
-
 import java.util.ArrayList;
 
 public class ReadRecipe {
