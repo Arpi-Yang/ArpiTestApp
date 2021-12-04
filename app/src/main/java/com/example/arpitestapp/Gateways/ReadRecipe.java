@@ -61,7 +61,7 @@ public class ReadRecipe {
         }
 
         // If no eligible value for rating exists, return default value of 60 minutes.
-        return 5;
+        return 3;
 
 
     }
