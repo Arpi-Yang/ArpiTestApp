@@ -47,7 +47,7 @@ public class User {
     }
 
     /* Updates GenreWeights to match interests */
-    private void updateGenreWeights(ArrayList<String> interests) {
+    public void updateGenreWeights(ArrayList<String> interests) {
         for (String interest: interests){
             // Does not override previous interests data
             if (!this.GenreWeights.containsKey(interest)){

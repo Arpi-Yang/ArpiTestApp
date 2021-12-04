@@ -3,21 +3,14 @@ package com.example.arpitestapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.nfc.Tag;
+
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.arpitestapp.Entities.GenreLibrary;
-import com.example.arpitestapp.Entities.Recipe;
 import com.example.arpitestapp.Entities.User;
-import com.example.arpitestapp.Gateways.Create;
-import com.example.arpitestapp.Gateways.Update;
-import com.example.arpitestapp.Gateways.Read;
+import com.example.arpitestapp.Gateways.ReadRecipe;
+import com.example.arpitestapp.Gateways.ReadUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 DataSnapshot mirSnapshot = snapshot.child("mir");
-                User user = Read.readUser(mirSnapshot);
+                User user = ReadUser.readUser(mirSnapshot);
                 ArrayList<String> userInterests = user.getInterests();
                 String displayText = userInterests.toString();
                 mConditionTextView.setText(displayText);
