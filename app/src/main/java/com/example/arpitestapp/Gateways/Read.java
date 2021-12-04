@@ -1,5 +1,6 @@
 package com.example.arpitestapp.Gateways;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.arpitestapp.Entities.GenreLibrary;
 import com.example.arpitestapp.Entities.Recipe;
+import com.example.arpitestapp.Entities.Review;
 import com.example.arpitestapp.Entities.User;
 import com.example.arpitestapp.Entities.UserSecurity;
 import com.google.firebase.database.DataSnapshot;
@@ -16,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Read {
     private static final String TAG = "Read";
@@ -84,13 +88,47 @@ public class Read {
             userInterests.add(interest.getValue(String.class));
         }
 
-        // TODO:
+        // TODO: load in user saved recipes
+        ArrayList<Recipe> userSavedRecipes = new ArrayList<>();
+        DataSnapshot userSavedRecipeSnapshot = singleUserRef.child("SavedRecipes");
+        for (DataSnapshot savedRecipeSnap : userSavedRecipeSnapshot.getChildren()) {
+            Recipe savedRecipe = readRecipe(savedRecipeSnap);
+            userSavedRecipes.add(savedRecipe);
+        }
+
+        // TODO: load in user genre weights
+        Map<String, Double> userGenreWeights = new HashMap<>();
+        DataSnapshot userGenreWeightsSnapshot = singleUserRef.child("genreWeights");
+        for (DataSnapshot genreWeightSnap : userGenreWeightsSnapshot.getChildren()) {
+            String genreWeightName = genreWeightSnap.getKey();
+            Double genreWeightValue = genreWeightSnap.getValue(Double.class);
+            userGenreWeights.put(genreWeightName, genreWeightValue);
+        }
+
+        // TODO: load in user saved reviews
+        Map<Integer, Review> userReviews = new HashMap<>();
+        DataSnapshot userReviewsSnapshot = singleUserRef.child("UserReviews");
+        for (DataSnapshot userReviewSnap : userReviewsSnapshot.getChildren()) {
+            Review userReview = readReview(userReviewSnap);
+            int reviewID = userReview.getReviewID();
+            userReviews.put(reviewID, userReview);
+        }
 
         // Construct and return a new user
         User newUser = new User(userUsername, userPassword, userDisplayName, userAge, userBiography, userInterests);
+        // TODO: modify extra factors
         return newUser;
     }
 
+    public static Review readReview(DataSnapshot reviewSnapshot) {
+        int reviewID = reviewSnapshot.child("reviewID").getValue(int.class);
+        int recipeID = reviewSnapshot.child("recipeID").getValue(int.class);
+        String username = reviewSnapshot.child("username").getValue(String.class);
+        String comments = reviewSnapshot.child("comments").getValue(String.class);
+        int rating = reviewSnapshot.child("rating").getValue(int.class);
+
+        return new Review(reviewID, recipeID, username, comments, rating);
+    }
 
     public static GenreLibrary populateGenreLibrary(final recipeDataStatus dataStatus) {
         // Initialize an empty GenreLibrary object to populate
