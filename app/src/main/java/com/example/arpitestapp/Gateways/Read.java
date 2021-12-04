@@ -1,17 +1,14 @@
 package com.example.arpitestapp.Gateways;
-
-import android.provider.ContactsContract;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.arpitestapp.Entities.GenreLibrary;
 import com.example.arpitestapp.Entities.Recipe;
-import com.example.arpitestapp.Entities.Review;
 import com.example.arpitestapp.Entities.User;
 import com.example.arpitestapp.Entities.UserSecurity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,9 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-/**
- * something something document my code
- */
 public class Read {
     private static final String TAG = "Read";
 
@@ -31,7 +25,14 @@ public class Read {
     private static final DatabaseReference mRecipeRef = mRootRef.child("recipes");
     private static final DatabaseReference mUserRef = mRootRef.child("users");
 
-    public static UserSecurity populateUserSecurity() {
+    public interface userDataStatus {
+        void userSecurityLoaded(UserSecurity userSecurity);
+    }
+    public interface recipeDataStatus {
+        void genreLibraryLoaded(GenreLibrary genreLibrary);
+    }
+
+    public  static UserSecurity populateUserSecurity(final userDataStatus dataStatus) {
         // Initialize an empty UserSecurity object to populate
         final UserSecurity[] populatedUserSecurity = {new UserSecurity()};
 
@@ -41,7 +42,7 @@ public class Read {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Populate the UserSecurity object
                 UserSecurity newUserSecurity = Read.fillUserSecurity(dataSnapshot);
-                populatedUserSecurity[0] = newUserSecurity;
+                dataStatus.userSecurityLoaded(newUserSecurity);
             }
 
             @Override
@@ -58,7 +59,7 @@ public class Read {
         UserSecurity usersUserSecurity = new UserSecurity();
 
         // Loop through all the users in the database
-        for (DataSnapshot singleUserRef : dataSnapshot.getChildren()) {
+        for(DataSnapshot singleUserRef : dataSnapshot.getChildren()){
 
             // Add a user from the database to the UserSecurity object
             User user = readUser(singleUserRef);
@@ -68,12 +69,7 @@ public class Read {
         return usersUserSecurity;
     }
 
-    /**
-     *
-     * @param singleUserRef
-     * @return
-     */
-    private static User readUser(DataSnapshot singleUserRef) {
+    public static User readUser(DataSnapshot singleUserRef) {
         // Read user attributes from singleUserRef
         String userUsername = singleUserRef.child("username").getValue(String.class);
         String userDisplayName = singleUserRef.child("displayName").getValue(String.class);
@@ -81,30 +77,32 @@ public class Read {
         String userBiography = singleUserRef.child("biography").getValue(String.class);
         int userAge = singleUserRef.child("age").getValue(Integer.class);
 
-        ArrayList<String> userInterestList = new ArrayList<>();
-        DataSnapshot userInterestsSnapshot = singleUserRef.child("interests");
-        for (DataSnapshot userInterest : userInterestsSnapshot.getChildren()) {
-            userInterestList.add(userInterest.getValue(String.class));
+        // TODO: fix this one and fix the database for it
+        ArrayList<String> userInterests = new ArrayList<>();
+        DataSnapshot userInterestSnapshot = singleUserRef.child("interests");
+        for (DataSnapshot interest : userInterestSnapshot.getChildren()) {
+            userInterests.add(interest.getValue(String.class));
         }
 
+        // TODO:
+
         // Construct and return a new user
-        User newUser = new User(userUsername, userPassword, userDisplayName, userAge, userBiography, userInterestList);
+        User newUser = new User(userUsername, userPassword, userDisplayName, userAge, userBiography, userInterests);
         return newUser;
     }
 
 
-    public static GenreLibrary populateGenreLibrary() {
+    public static GenreLibrary populateGenreLibrary(final recipeDataStatus dataStatus) {
         // Initialize an empty GenreLibrary object to populate
+        final GenreLibrary[] populatedGenreLibrary = {new GenreLibrary()};
 
-        final GenreLibrary[] populatedGenreLib = {new GenreLibrary()};
-
-//      Add a listener event object to the recipe database reference
+        // Add a listener event object to the recipe database reference
         mRecipeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Populate the GenreLibrary object
-                populatedGenreLib[0] = fillGenreLibrary(dataSnapshot);
-
+                GenreLibrary newGenreLibrary = Read.fillGenreLibrary(dataSnapshot);
+                dataStatus.genreLibraryLoaded(newGenreLibrary);
             }
 
             @Override
@@ -113,10 +111,8 @@ public class Read {
             }
         });
 
-        return populatedGenreLib[0];
+        return populatedGenreLibrary[0];
     }
-
-
 
     /**
      * note: dataSnapshot must be mRecipeRef
@@ -124,7 +120,6 @@ public class Read {
     private static GenreLibrary fillGenreLibrary(DataSnapshot dataSnapshot) {
         // Create empty GenreLibrary object
         GenreLibrary genreLibrary = new GenreLibrary();
-
         // Loop through all the recipes in the database
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Recipe recipe = readRecipe(ds);
@@ -138,7 +133,6 @@ public class Read {
         }
         return genreLibrary;
     }
-
     /**
      * @param singleRecipeRef
      * @return
